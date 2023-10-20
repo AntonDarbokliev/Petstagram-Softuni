@@ -20,7 +20,7 @@ async function getAll() {
 }
 
 async function getById(id) {
-  return Photo.findById(id).lean().populate('owner').populate('comments');
+  return Photo.findById(id).lean().populate('owner').populate('comments.user');
 }
 
 async function find(name) {
@@ -35,8 +35,13 @@ async function del(id) {
   return Photo.findByIdAndDelete(id);
 }
 
-async function buy(gameId,userId){
-  return Photo.findByIdAndUpdate(gameId,{$push : {boughtBy : userId}})    // CHANGE FUNCTION NAME AND PROPERTIES ACCORDING TO THE TASK
+async function comment(photoId,commentData){
+  // return Photo.findByIdAndUpdate(photoId,{$push : {boughtBy : userId}})
+  
+  const photo = await Photo.findById(photoId)
+  photo.comments.push(commentData)
+  return photo.save()
+  // CHANGE FUNCTION NAME AND PROPERTIES ACCORDING TO THE TASK
 }
 
 async function getLastThree(){
@@ -50,6 +55,6 @@ module.exports = {
   find,
   edit,
   del,
-  buy,
+  comment,
   getLastThree
 };

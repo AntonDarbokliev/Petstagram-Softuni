@@ -1,5 +1,6 @@
 const { isAuthorized } = require("../middlewares/authMiddleware.js");
 const Photo = require("../models/Photo.js");
+const User = require("../models/User.js");
 const photoService = require("../services/photoService.js");
 const { errorHelper } = require("../utils/errorHelpers.js");
 // const isOwner = require("../utils/validationHelper.js");
@@ -41,74 +42,68 @@ photoController.get("/catalog", async (req, res) => {
   }
 });
 
-// photoController.get("/:id/details", async (req, res) => {
-//   try {
-//     const game = await photoService.getById(req.params.id);
-//     const isOwner = req.user?._id == game.owner._id;
-//     let hasBought = false;
-//     const parsedBuys = JSON.parse(JSON.stringify(game.boughtBy));
-//     const idArr = parsedBuys.map((x) => x._id);
-//     if (idArr.includes(req.user?._id)) {
-//       //CHANGE PROPERTIES ACCORDING TO THE TASK
-//       hasBought = true;
-//     }
+photoController.get("/:id/details", async (req, res) => {
+  try {
+    const photo = await photoService.getById(req.params.id);
+    const isOwner = req.user?._id == photo.owner._id;
+    // let hasBought = false;
+    // const parsedComments = JSON.parse(JSON.stringify(photo.comments));
+    // const idArr = parsedComments.map((x) => x.user._id);
+    // if (idArr.includes(req.user?._id)) {
+    //   //CHANGE PROPERTIES ACCORDING TO THE TASK
+    //   hasBought = true;
+    // }
 
-//     //   const votesString = parsedVotes.map(x => x.email).join(', ')
+    //   const votesString = parsedVotes.map(x => x.email).join(', ')
 
-//     res.render("details", {
-//       title: "Details",
-//       game,
-//       isOwner,
-//       hasBought,
-//       // votesString,
-//       parsedBuys,
-//     });
-//   } catch (err) {
-//     const errors = errorHelper(err);
-//     res.render("details", {
-//       title: "Details",
-//       errors,
-//     });
-//   }
-// });
+    console.log(photo);
+    res.render("details", {
+      title: "Details",
+      photo,
+      isOwner,
+      // hasBought,
+      // votesString,
+      // parsedBuys,
+    });
+  } catch (err) {
+    const errors = errorHelper(err);
+    res.render("details", {
+      title: "Details",
+      errors,
+    });
+  }
+});
 
-// photoController.get("/:id/buy", isAuthorized, async (req, res) => {
-//   const gameId = req.params.id;
-//   const userId = req.user._id;
-//   try {
-//     const game = await photoService.getById(gameId);
-//     let hasBought = false;
-//     const parsedBuys = JSON.parse(JSON.stringify(game.boughtBy));
-//     const idArr = parsedBuys.map((x) => x._id);
-//     if (idArr.includes(req.user?._id)) {
-//       hasBought = true;
-//     }
-//     if (hasBought) {
-//       throw new Error("You have already bought this game");
-//     }
+photoController.post("/:id/comment", isAuthorized, async (req, res) => {
+  try {
+    const photoId = req.params.id;
+    // const user =  req.user._id
+    const user = req.user._id
+    const {comment} = req.body
 
-//     await photoService.buy(gameId, userId);
-//     res.redirect(`/photos/${gameId}/details`);
-//   } catch (err) {
-//     const errors = errorHelper(err);
-//     res.render("home", {
-//       title: "Home",
-//       errors,
-//     });
-//   }
-// });
+    await photoService.comment(photoId, {user,comment});
+    res.redirect(`/photo/${photoId}/details`);
+  } catch (err) {
+    // const errors = errorHelper(err);
+    // res.render("home", {
+    //   title: "Home",
+    //   errors,
+    // });
+    console.log(err);
+  }
+});
 
 // photoController.get("/:id/edit", isAuthorized, async (req, res) => {
 //   try {
-//     const gameId = req.params.id;
-//     const game = await photoService.getById(gameId);
+//     const photoId = req.params.id;
+//     const photo = await photoService.getById(photoId);
 
-//     const isOwner = req.user?._id == game.owner._id;
-//     if (!isOwner) throw new Error("You are not the owner of this game");
+//     const isOwner = req.user?._id == photo.owner._id;
+//     if (!isOwner) throw new Error("You are not the owner of this photo");
 
 //     res.render("edit", {
 //       title: "Edit",
-//       game,
+//       photo,
 //     });
 //   } catch (err) {
 //     const errors = errorHelper(err);
@@ -121,15 +116,15 @@ photoController.get("/catalog", async (req, res) => {
 
 // photoController.post("/:id/edit", isAuthorized, async (req, res) => {
 //   const gameData = req.body;
-//   const gameId = req.params.id;
-//   const game = await photoService.getById(gameId);
+//   const photoId = req.params.id;
+//   const photo = await photoService.getById(photoId);
 
-//   const isOwner = req.user?._id == game.owner._id;
-//   if (!isOwner) throw new Error("You are not the owner of this game");
+//   const isOwner = req.user?._id == photo.owner._id;
+//   if (!isOwner) throw new Error("You are not the owner of this photo");
 
 //   try {
-//     await photoService.edit(game._id, gameData);
-//     res.redirect(`/photos/${game._id}/details`);
+//     await photoService.edit(photo._id, gameData);
+//     res.redirect(`/photo/${photo._id}/details`);
 //   } catch (err) {
 //     const errors = errorHelper(err);
 //     res.render("edit", {
@@ -140,14 +135,14 @@ photoController.get("/catalog", async (req, res) => {
 // });
 
 // photoController.get("/:id/delete", isAuthorized, async (req, res) => {
-//   const gameId = req.params.id;
-//   const game = await photoService.getById(gameId);
+//   const photoId = req.params.id;
+//   const photo = await photoService.getById(photoId);
 
 //   try {
-//     const isOwner = req.user?._id == game.owner._id;
-//     if (!isOwner) throw new Error("You are not the owner of this game");
-//     await photoService.del(gameId);
-//     res.redirect("/photos/catalog");
+//     const isOwner = req.user?._id == photo.owner._id;
+//     if (!isOwner) throw new Error("You are not the owner of this photo");
+//     await photoService.del(photoId);
+//     res.redirect("/photo/catalog");
 //   } catch (err) {
 //     const errors = errorHelper(err);
 //     res.render("home", {
