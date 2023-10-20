@@ -1,6 +1,6 @@
 const { errorHelper } = require("../utils/errorHelpers.js");
 const { register, login } = require("../services/userService.js");
-// const { isAuthorized } = require("../middlewares/authMiddleware.js");
+const { isAuthorized } = require("../middlewares/authMiddleware.js");
 
 
 
@@ -64,10 +64,10 @@ userController.get("/login", async (req, res) => {
     }
   });
 
-//   userController.get("/logout",isAuthorized , async (req, res) => {
-//     res.clearCookie('auth')
-//     res.redirect('/')
-//   });
+  userController.get("/logout",isAuthorized , async (req, res) => {
+    res.clearCookie('auth')
+    res.redirect('/')
+  });
   
 
 module.exports = userController;
