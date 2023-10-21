@@ -93,46 +93,46 @@ photoController.post("/:id/comment", isAuthorized, async (req, res) => {
   }
 });
 
-// photoController.get("/:id/edit", isAuthorized, async (req, res) => {
-//   try {
-//     const photoId = req.params.id;
-//     const photo = await photoService.getById(photoId);
+photoController.get("/:id/edit", isAuthorized, async (req, res) => {
+  try {
+    const photoId = req.params.id;
+    const photo = await photoService.getById(photoId);
 
-//     const isOwner = req.user?._id == photo.owner._id;
-//     if (!isOwner) throw new Error("You are not the owner of this photo");
+    const isOwner = req.user?._id == photo.owner._id;
+    if (!isOwner) throw new Error("You are not the owner of this photo");
 
-//     res.render("edit", {
-//       title: "Edit",
-//       photo,
-//     });
-//   } catch (err) {
-//     const errors = errorHelper(err);
-//     res.render("edit", {
-//       title: "Photo Edit",
-//       errors,
-//     });
-//   }
-// });
+    res.render("edit", {
+      title: "Edit",
+      photo,
+    });
+  } catch (err) {
+    const errors = errorHelper(err);
+    res.render("edit", {
+      title: "Photo Edit",
+      errors,
+    });
+  }
+});
 
-// photoController.post("/:id/edit", isAuthorized, async (req, res) => {
-//   const gameData = req.body;
-//   const photoId = req.params.id;
-//   const photo = await photoService.getById(photoId);
+photoController.post("/:id/edit", isAuthorized, async (req, res) => {
+  const photoData = req.body;
+  const photoId = req.params.id;
+  const photo = await photoService.getById(photoId);
 
-//   const isOwner = req.user?._id == photo.owner._id;
-//   if (!isOwner) throw new Error("You are not the owner of this photo");
+  const isOwner = req.user?._id == photo.owner._id;
+  if (!isOwner) throw new Error("You are not the owner of this photo");
 
-//   try {
-//     await photoService.edit(photo._id, gameData);
-//     res.redirect(`/photo/${photo._id}/details`);
-//   } catch (err) {
-//     const errors = errorHelper(err);
-//     res.render("edit", {
-//       title: "Edit",
-//       errors,
-//     });
-//   }
-// });
+  try {
+    await photoService.edit(photo._id, photoData);
+    res.redirect(`/photo/${photo._id}/details`);
+  } catch (err) {
+    const errors = errorHelper(err);
+    res.render("edit", {
+      title: "Edit",
+      errors,
+    });
+  }
+});
 
 // photoController.get("/:id/delete", isAuthorized, async (req, res) => {
 //   const photoId = req.params.id;
