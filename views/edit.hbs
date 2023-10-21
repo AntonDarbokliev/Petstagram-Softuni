@@ -3,26 +3,28 @@
         <div class="editPage">
             <h2>Edit photo</h2>
             <!-- Start Add Photo Form -->
-            <form action="">
+            <form action="" method="POST">
+                {{#with photo}}
                 <p>
-                    <input type="text" name="" placeholder="Name" value="Sal">
+                    <input type="text" name="name" placeholder="Name" value="{{name}}">
                 </p>
 
                 <p>
-                    <input type="number" name="" placeholder="Age" value="4">
+                    <input type="number" name="age" placeholder="Age" value="{{age}}">
                 </p>
 
                 <p>
-                    <textarea type="text" name="" placeholder="Description">This is my pet!</textarea>
+                    <textarea type="text" name="description" placeholder="Description">{{description}}</textarea>
                 </p>
 
                 <p>
-                    <input type="text" name="" placeholder="Location" value="Bansko, Bulgaria">
+                    <input type="text" name="location" placeholder="Location" value="{{location}}">
                 </p>
 
                 <p>
-                    <input type="text" name="" placeholder="Link to image" value="/static/images/axolotl.jpeg">
+                    <input type="text" name="imageUrl" placeholder="Link to image" value="{{imageUrl}}">
                 </p>
+                {{/with}}
                 <!-- Add Photo Button -->
                 <button class="edit-btn" type="submit">Edit Photo</button>
             </form>

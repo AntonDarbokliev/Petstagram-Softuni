@@ -29,8 +29,10 @@
               <!-- photo's location -->
               <span>{{photo.location}}</span>
 
+                {{#if isOwner}}
               <!-- IF the viewer is the creator of the photo -->
               <div class="edit-delete-btns">
+
 
                 <!-- Edit Pet Photo -->
                 <a href="/photo/{{photo._id}}/edit">
@@ -50,6 +52,7 @@
                   />
                 </a>
               </div>
+                {{/if}}
 
             </h3>
           </div>

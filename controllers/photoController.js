@@ -134,22 +134,22 @@ photoController.post("/:id/edit", isAuthorized, async (req, res) => {
   }
 });
 
-// photoController.get("/:id/delete", isAuthorized, async (req, res) => {
-//   const photoId = req.params.id;
-//   const photo = await photoService.getById(photoId);
+photoController.get("/:id/delete", isAuthorized, async (req, res) => {
+  const photoId = req.params.id;
+  const photo = await photoService.getById(photoId);
 
-//   try {
-//     const isOwner = req.user?._id == photo.owner._id;
-//     if (!isOwner) throw new Error("You are not the owner of this photo");
-//     await photoService.del(photoId);
-//     res.redirect("/photo/catalog");
-//   } catch (err) {
-//     const errors = errorHelper(err);
-//     res.render("home", {
-//       errors,
-//     });
-//   }
-// });
+  try {
+    const isOwner = req.user?._id == photo.owner._id;
+    if (!isOwner) throw new Error("You are not the owner of this photo");
+    await photoService.del(photoId);
+    res.redirect("/photo/catalog");
+  } catch (err) {
+    const errors = errorHelper(err);
+    res.render("home", {
+      errors,
+    });
+  }
+});
 
 // photoController.get('/search',async (req,res) => {
 //     try {
