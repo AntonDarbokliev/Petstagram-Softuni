@@ -9,9 +9,9 @@ module.exports = (app) => {
   app.use(homeController);
   app.use("/user", userController);
   app.use("/photo", photoController);
-//   app.use('*',(req,res)=>{
-//     res.render('404')
-//   })
+  app.use('*',(req,res)=>{
+    res.render('404')
+  })
 
 
 };
